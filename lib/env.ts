@@ -1,24 +1,28 @@
 import { z } from "zod";
 
-const serverEnvSchema = z.object({
+const aiEnvSchema = z.object({
   GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
   GEMINI_MODEL: z.string().min(1).default("gemini-3.5-flash"),
+});
+
+const stripeEnvSchema = z.object({
   STRIPE_SECRET_KEY: z.string().startsWith("sk_test_"),
   NEXT_PUBLIC_SITE_URL: z.url(),
+});
+
+const planEnvSchema = z.object({
   PLAN_TOKEN_SECRET: z.string().min(32),
 });
 
-export type ServerEnv = z.infer<typeof serverEnvSchema>;
-
-let cached: ServerEnv | undefined;
-
-export function getServerEnv(): ServerEnv {
-  if (cached) return cached;
-  const parsed = serverEnvSchema.safeParse(process.env);
+function readEnv<T extends z.ZodType>(schema: T): z.infer<T> {
+  const parsed = schema.safeParse(process.env);
   if (!parsed.success) {
     const fields = parsed.error.issues.map((issue) => issue.path.join(".")).join(", ");
     throw new Error(`Invalid or missing environment variables: ${fields}`);
   }
-  cached = parsed.data;
-  return cached;
+  return parsed.data;
 }
+
+export const getAiEnv = () => readEnv(aiEnvSchema);
+export const getStripeEnv = () => readEnv(stripeEnvSchema);
+export const getPlanEnv = () => readEnv(planEnvSchema);
