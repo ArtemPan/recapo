@@ -1,16 +1,15 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { z } from "zod";
 import type { Plan } from "@/lib/plan";
-
-const planResponseSchema = z.object({ plan: z.enum(["free", "pro"]) });
 
 async function fetchPlan(): Promise<Plan> {
   try {
     const response = await fetch("/api/plan", { cache: "no-store" });
-    const parsed = planResponseSchema.safeParse(await response.json());
-    return parsed.success ? parsed.data.plan : "free";
+    const body: unknown = await response.json();
+    return typeof body === "object" && body !== null && "plan" in body && body.plan === "pro"
+      ? "pro"
+      : "free";
   } catch {
     return "free";
   }

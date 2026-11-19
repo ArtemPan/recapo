@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import type { BillingInterval } from "@/lib/pricing";
 
-const checkoutResponseSchema = z.object({ url: z.url() });
+function checkoutUrl(body: unknown) {
+  if (typeof body !== "object" || body === null || !("url" in body)) return null;
+  return typeof body.url === "string" && body.url.startsWith("https://") ? body.url : null;
+}
 
 export function UpgradeButton({ interval }: { interval: BillingInterval }) {
   const [pending, setPending] = useState(false);
@@ -19,9 +21,9 @@ export function UpgradeButton({ interval }: { interval: BillingInterval }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ interval }),
       });
-      const parsed = checkoutResponseSchema.safeParse(await response.json());
-      if (!parsed.success) throw new Error("Checkout unavailable");
-      window.location.assign(parsed.data.url);
+      const url = checkoutUrl(await response.json());
+      if (!url) throw new Error("Checkout unavailable");
+      window.location.assign(url);
     } catch {
       setFailed(true);
       setPending(false);

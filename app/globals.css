@@ -9,9 +9,9 @@
   --accent: #5b4cf0;
   --accent-foreground: #ffffff;
   --accent-soft: #eeebff;
-  --success: #15803d;
-  --warning: #b45309;
-  --danger: #b91c1c;
+  --success: #166534;
+  --warning: #92400e;
+  --danger: #991b1b;
 }
 
 @media (prefers-color-scheme: dark) {

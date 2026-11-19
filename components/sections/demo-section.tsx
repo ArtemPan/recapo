@@ -1,4 +1,4 @@
-import { Demo } from "@/components/demo/demo";
+import { LazyDemo } from "@/components/demo/lazy-demo";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export function DemoSection() {
@@ -10,7 +10,7 @@ export function DemoSection() {
           title="Try it on your own notes"
           description="Paste a meeting transcript or load the sample. The recap streams in as the model writes it."
         />
-        <Demo />
+        <LazyDemo />
       </div>
     </section>
   );
