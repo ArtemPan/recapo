@@ -73,12 +73,19 @@ export function PricingPlans() {
           <p className="mt-4 text-4xl font-semibold tracking-tight">$0</p>
           <p className="mt-1 text-sm text-muted">For trying Recapo on a few meetings.</p>
           <FeatureList items={freeFeatures} />
-          <a
-            href="#demo"
-            className="mt-8 block rounded-xl border border-border px-4 py-2.5 text-center text-sm font-semibold hover:bg-background"
-          >
-            Try the demo
-          </a>
+          <div className="mt-auto pt-8">
+            <a
+              href="#demo"
+              className="block rounded-xl border border-border px-4 py-2.5 text-center text-sm font-semibold hover:bg-background"
+            >
+              Try the demo
+            </a>
+            <p className="mt-3 text-center text-xs text-muted">
+              No card or sign-up needed.
+              <br />
+              Just paste your notes.
+            </p>
+          </div>
         </article>
 
         <article className="flex flex-col rounded-2xl border-2 border-accent bg-surface p-6">
@@ -94,7 +101,7 @@ export function PricingPlans() {
           </p>
           <p className="mt-1 text-sm text-muted">For teams with long, busy meetings.</p>
           <FeatureList items={proFeatures} />
-          <div className="mt-8">
+          <div className="mt-auto pt-8">
             {isPro ? (
               <p className="rounded-xl bg-success/10 px-4 py-2.5 text-center text-sm font-semibold text-success">
                 You&apos;re on Pro
