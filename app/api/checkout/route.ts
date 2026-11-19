@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { apiError } from "@/lib/api-error";
-import { getStripeEnv } from "@/lib/env";
 import { CURRENCY, PRO_PRICE_CENTS } from "@/lib/pricing";
 import { getStripe } from "@/lib/stripe";
 
@@ -11,7 +10,7 @@ export async function POST(request: Request) {
   if (!body.success) return apiError("invalid_input", 400);
 
   const { interval } = body.data;
-  const siteUrl = getStripeEnv().NEXT_PUBLIC_SITE_URL;
+  const origin = new URL(request.url).origin;
 
   const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
@@ -26,8 +25,8 @@ export async function POST(request: Request) {
         },
       },
     ],
-    success_url: `${siteUrl}/?session_id={CHECKOUT_SESSION_ID}#pricing`,
-    cancel_url: `${siteUrl}/?checkout=cancelled#pricing`,
+    success_url: `${origin}/?session_id={CHECKOUT_SESSION_ID}#pricing`,
+    cancel_url: `${origin}/?checkout=cancelled#pricing`,
   });
 
   if (!session.url) return apiError("busy", 503);

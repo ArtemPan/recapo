@@ -8,7 +8,6 @@ const aiEnvSchema = z.object({
 
 const stripeEnvSchema = z.object({
   STRIPE_SECRET_KEY: z.string().startsWith("sk_test_"),
-  NEXT_PUBLIC_SITE_URL: z.url(),
 });
 
 const planEnvSchema = z.object({
