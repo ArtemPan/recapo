@@ -1,10 +1,10 @@
-import { google } from "@ai-sdk/google";
 import { Output, streamText } from "ai";
 import { z } from "zod";
 import { apiError } from "@/lib/api-error";
 import { clientIp } from "@/lib/client-ip";
 import { currentPlan } from "@/lib/current-plan";
 import { getAiEnv } from "@/lib/env";
+import { modelWithFallback } from "@/lib/model";
 import { PLAN_LIMITS } from "@/lib/plan";
 import { analysisInstructions } from "@/lib/prompt";
 import { createRateLimiter } from "@/lib/rate-limit";
@@ -31,11 +31,12 @@ export async function POST(request: Request) {
   }
 
   const result = streamText({
-    model: google(env.GEMINI_MODEL),
+    model: modelWithFallback(env.GEMINI_MODEL, env.GEMINI_FALLBACK_MODEL),
     instructions: analysisInstructions(plan),
     prompt: notes,
     output: Output.object({ schema: resultSchemaFor(plan), name: "meeting_recap" }),
-    maxRetries: 1,
+    maxRetries: 0,
+    timeout: { firstChunkMs: 25_000, totalMs: 55_000 },
     onError: ({ error }) => {
       console.error("analyze stream failed", error);
     },

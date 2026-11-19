@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const aiEnvSchema = z.object({
   GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
-  GEMINI_MODEL: z.string().min(1).default("gemini-3.5-flash"),
+  GEMINI_MODEL: z.string().min(1).default("gemini-flash-latest"),
+  GEMINI_FALLBACK_MODEL: z.string().min(1).default("gemini-flash-lite-latest"),
 });
 
 const stripeEnvSchema = z.object({
